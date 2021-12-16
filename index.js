@@ -84,15 +84,7 @@ class Seasons {
   /**
    * [Exercise 5B] Seasons.prototype.next returns the next season
    * @returns {string} - the next season starting with "summer"
-   *
-   * EXAMPLE
-   * const seasons = new Seasons()
-   * seasons.next() // returns "summer"
-   * seasons.next() // returns "fall"
-   * seasons.next() // returns "winter"
-   * seasons.next() // returns "spring"
-   * seasons.next() // returns "summer"
-   */
+   **/
   next() {
     if (seasonsCallCount === 0) this.season = "summer";
     if (seasonsCallCount === 1) this.season = "fall";
@@ -123,7 +115,8 @@ class Car {
    */
   constructor(name, tankSize, mpg) {
     this.odometer = 0; // car initilizes with zero miles
-    this.tank = tankSize; // car initiazes full of gas
+    this.tankCapacity = tankSize; // car initiazes full of gas
+    this.currentTankLevel = tankSize;
     this.mpg = mpg;
   }
 
@@ -132,29 +125,22 @@ class Car {
    * @param {string} distance - the distance we want the car to drive
    * @returns {number} - the updated odometer value
    *
-   * EXAMPLE
-   * const focus = new Car('focus', 20, 30)
-   * focus.drive(100) // returns 100
-   * focus.drive(100) // returns 200
-   * focus.drive(100) // returns 300
-   * focus.drive(200) // returns 500
-   * focus.drive(200) // returns 600 (ran out of gas after 100 miles)
    */
   drive(distance) {
-    if (this.tank === 0)
+    if (this.currentTankLevel === 0)
       return `${this.odometer} (no distance driven as tank is empty)`;
 
-    const distanceTravelable = this.tank * this.mpg;
+    const distanceTravelable = this.currentTankLevel * this.mpg;
 
     if (distance > distanceTravelable) {
       this.odometer += distanceTravelable;
-      this.tank = 0;
+      this.currentTankLevel = 0;
       return `${this.odometer} (ran out of gas after ${distanceTravelable} miles)`;
     }
 
     this.odometer += distance;
 
-    this.tank -= distance / this.mpg;
+    this.currentTankLevel -= distance / this.mpg;
 
     return this.odometer;
   }
@@ -171,7 +157,12 @@ class Car {
    * focus.refuel(99) // returns 600 (tank only holds 20)
    */
   refuel(gallons) {
-    // ✨ implement
+    if (this.currentTankLevel + gallons > this.tankCapacity)
+      return `${this.odometer} (tank only holds ${this.tankCapacity})`;
+
+    this.currentTankLevel += gallons;
+
+    return this.currentTankLevel * this.mpg;
   }
 }
 
@@ -188,8 +179,12 @@ class Car {
  *    // result is false
  * })
  */
-function isEvenNumberAsync(number) {
-  // ✨ implement
+async function isEvenNumberAsync(number) {
+  const isEven = number % 2 === 0 ? true : false;
+
+  return new Promise(function (resolve, reject) {
+    setTimeout(resolve, 1000, isEven);
+  });
 }
 
 module.exports = {
